@@ -1,19 +1,50 @@
-<?php     
+<?php
 
 session_start();
 
-include '../class/display.php'; 
+include '../class/display.php';
+include '../class/client.php';
 
 $db = new db_Connection('localhost', 'root', '', 'opep2');
 $display = new Display($db);
+$delete = new Client($db);
 
 $userId = $display->fetchUserIdBySessionEmail();
 
-if ($userId !== false) {
-    echo "User ID: " . $userId;
-} else {
-    echo "Failed to fetch user ID.";
+// if ($userId !== false) {
+//     echo "User ID: " . $userId;
+// } else {
+//     echo "Failed to fetch user ID.";
+// }
+
+    // Check if the deletePlant form is submitted
+// Check if the deletePlant form is submitted
+if (isset($_POST['deletePlant'])) {
+    $plantIdToDelete = $_POST['idplant'];
+
+    // Assuming you have the user ID stored in your session
+    // $userId = $this->fetchUserIdBySessionEmail();
+
+    if (!$userId) {
+        // Handle the case where user ID is not available
+        echo "User ID not found in session.";
+        exit();
+    }
+
+    // Call the method to delete the plant from the cart
+    $deleted = $delete->deletePlantFromCart($userId, $plantIdToDelete);
+
+    // if ($deleted) {
+    //     // Optional: Redirect to refresh the page or update the cart display
+    //     header("Location: your_cart_page.php");
+    //     exit();
+    // } else {
+    //     // Handle the case where the plant deletion fails
+    //     echo "Failed to delete the plant from the cart.";
+    //     exit();
+    // }
 }
+
 ?>
 
 
@@ -134,8 +165,11 @@ if ($userId !== false) {
                                             </tr>
                                         </thead>
 
-                                        
-<!-- tbody  -->
+                                        <tbody> <?php $display->displayPlantsInCart(); ?>
+                                        </tbody>
+
+
+
 
                                     </table>
                                 </div>

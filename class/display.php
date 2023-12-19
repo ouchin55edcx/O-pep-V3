@@ -216,13 +216,13 @@ public function getCategoryNamesForSelector()
         }
     }
 
-    public function displayCartCount($cartCount) {
-        if ($cartCount > 0) {
-            echo "<p class='bg-purple-700 text-white text-md text-center m-auto rounded-full animate-bounce font-bold w-[1rem]'>$cartCount</p>";
-        } else {
-            echo "";
-        }
-    }
+    // public function displayCartCount($cartCount) {
+    //     if ($cartCount > 0) {
+    //         echo "<p class='bg-purple-700 text-white text-md text-center m-auto rounded-full animate-bounce font-bold w-[1rem]'>$cartCount</p>";
+    //     } else {
+    //         echo "";
+    //     }
+    // }
     // get user id
     public function fetchUserIdBySessionEmail()
     {
@@ -282,6 +282,98 @@ public function getCategoryNamesForSelector()
             return array();
         }
     }
+
+    public function displayPlantsInCart()
+    {
+        // Assuming you have the user ID stored in your session
+        $userId = $this->fetchUserIdBySessionEmail();
+    
+        if (!$userId) {
+            // Handle the case where user ID is not available
+            echo "User ID not found in session.";
+            return;
+        }
+    
+        $query = "SELECT cart.*, plant.*
+                  FROM cart 
+                  JOIN plant ON PlantId = IdPlant
+                  WHERE UserId = ?";
+        $result = $this->db->con->prepare($query);
+    
+        $result->bindParam(1, $userId);
+        $result->execute();
+    
+        if ($result) {
+            $plants = $result->fetchAll(PDO::FETCH_ASSOC);
+    
+            $totalPrice = 0;
+    
+            foreach ($plants as $plant) {
+                $plantTotalPrice = $plant['price'] * $plant['quantity'];
+    
+                $totalPrice += $plantTotalPrice;
+    
+                echo "
+                    <tr>
+                        <td class='w-9'>
+                            <img src='{$plant['image']}' alt='Plant Image'>
+                        </td>
+                        <td class='px-6 py-4 whitespace-no-wrap text-sm leading-5'>
+                            <p>" . htmlspecialchars($plant['Name']) . "</p>
+                        </td>
+                        <td class='px-6 py-4 whitespace-no-wrap text-sm leading-5'>
+                            <div class='flex text-[#685942]'>
+                                <p>Price: " . htmlspecialchars($plant['price']) . " DH</p>
+                            </div>
+                        </td>
+                        <td class='px-6 py-4 whitespace-no-wrap text-sm leading-5'>
+                            <div class='flex text-[#685942]'>
+                                <p>quantity: " . htmlspecialchars($plant['quantity']) . "</p>
+                            </div>
+                        </td>
+                        <td class='px-6 py-4 whitespace-no-wrap text-sm leading-5'>
+                            <div class='flex text-[#685942]'>
+                                <p>Total Price: " . htmlspecialchars($plantTotalPrice) . " DH</p>
+                            </div>
+                        </td>
+                        <td class='px-6 py-4 whitespace-no-wrap text-sm leading-5'>
+                            <div class='flex space-x-4'>
+                                <form action='' method='POST'>
+                                    <input type='hidden' name='idplant' value='{$plant['IdPlant']}'>
+                                    <button type='submit' name='deletePlant' class='text-red-500 hover:text-red-600'>
+                                        <svg xmlns='http://www.w3.org/2000/svg' class='w-5 h-5 mr-1 ml-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                            <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' />
+                                        </svg>
+                                        <p>Delete</p>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>";
+            }
+    
+            echo "
+                <tr>
+                    <td colspan='5' class='px-6 py-4 whitespace-no-wrap text-sm leading-5'>
+                        <div class='flex text-[#685942]'>
+                            <p>Total Cart Price: " . htmlspecialchars($totalPrice) . " DH</p>
+                        </div>
+                    </td>
+                </tr>";
+        }
+    }
+
+    public function countPlantsInCart()
+    {
+        $query = "SELECT COUNT(*) FROM cart"; // Adjust the query based on your actual schema
+        $stmt = $this->db->con->query($query);
+        return $stmt->fetchColumn(); // Fetch the count directly
+    }
+    
+
+    
+    
+    
 
 
     

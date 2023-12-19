@@ -240,7 +240,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['deletePlant'])) {
                                                     </thead>
 
                                                     <tbody class="bg-white divide-y divide-gray-200">
-                                                        <?php $display->displayCategoriesInDashboard(); ?>
+                                                            <?php $display->displayCategoriesInDashboard(); ?>
 
                                                     </tbody>
                                                 </table>

@@ -13,16 +13,46 @@ $display = new Display($db);
 
 $plants = $display->getPlants();
 $cart = new Client($db);
+$search = new Client($db);
 
 $plantManager = new Display($db);
 
 // Fetch category names for the selector
 $categories = $plantManager->getCategoryNamesForSelector();
 
+$userId = $display->fetchUserIdBySessionEmail();
 
 
+if (isset($_POST['addToCart'])) {
+    // Get user ID from the session
+    // echo $userId ;
 
+    // Get plant ID from the POST data
+    $plantId = $_POST['PlantId'];
+    // echo $plantId;
 
+    $result = $cart->addToCart($userId, $plantId);
+
+    // if ($result) {
+    //     // Plant added to the cart successfully
+    //     echo "Plant added to the cart.";
+    // } else {
+    //     // Something went wrong, handle the error
+    //     echo "Failed to add plant to the cart.";
+    // }
+
+}
+$cartCount = $plantManager->countPlantsInCart();
+if (isset($_POST['searchByName'])) {
+    $searchedPlantName = $_POST['PlantName'];
+
+    // Fetch plants based on the search
+    $searchedPlants = $search->searchPlantsByName($searchedPlantName);
+
+    // Display the search results (you can customize this based on your needs)
+    $plants = $display->getPlants();
+
+}
 
 ?>
 
@@ -83,14 +113,15 @@ $categories = $plantManager->getCategoryNamesForSelector();
                 </span>
                 Logout
             </a>
-            <a href="Cart.php">
 
+
+            <a href="Cart.php">
                 <?php
-                //   if($cartCount > 0){
-                //    echo " <p class='bg-purple-700 text-white text-md text-center m-auto rounded rounded-full animate-bounce  font-bold w-[1rem]'> $cartCount </p>";
-                //   }else{
-                // echo "";
-                //   }
+                if ($cartCount > 0) {
+                    echo "<p class='bg-purple-700 text-white text-md text-center m-auto rounded rounded-full animate-bounce  font-bold w-[1rem]'>$cartCount</p>";
+                } else {
+                    echo "";
+                }
                 ?>
 
                 <svg class="h-8 p-1 hover:text-purple-700 duration-200" aria-hidden="true" focusable="false" data-prefix="far" data-icon="shopping-cart" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-shopping-cart fa-w-18 fa-7x">
@@ -114,7 +145,7 @@ $categories = $plantManager->getCategoryNamesForSelector();
             </div>
         </form>
 
-        <form class="max-w-lg m-auto flex flex-col  items-center" action="" method="post">
+        <!-- <form class="max-w-lg m-auto flex flex-col  items-center" action="" method="post">
             <label for="" class="text-white py-3 text-2xl text-center font-semibold">Filter Plants by Categorie</label>
             <select name="categorie" class="w-full p-2 rounded-md bg-white text-black">
                 <option value="all">ALL</option>
@@ -126,7 +157,7 @@ $categories = $plantManager->getCategoryNamesForSelector();
 
             </select>
             <input type="submit" value="Search" name="searchByCategory" class="w-1/2 py-2  mt-3 rounded-md bg-purple-500 text-white font-semibold cursor-pointer hover:bg-purple-700 transition duration-300">
-        </form>
+        </form> -->
     </section>
 
     <section class="flex w-auto flex-wrap items-center justify-center bg-[#1A0B2D] pt-10 ">
@@ -149,8 +180,15 @@ $categories = $plantManager->getCategoryNamesForSelector();
                         </span>
                         <form action="" method="post">
                             <input type="hidden" name="PlantId" value="<?php echo $plant['IdPlant']; ?>">
-                            <input type="hidden" name="UserId" value="<?php echo $userId; ?>">
-                            <button type="submit" name="addToCart" class="flex items-center cursor-pointer px-3 py-2 text-xs font-bold leading-none text-purple-500 bg-white rounded-full hover:bg-purple-200 duration-500">
+                            <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
+
+                            <button type="submit" name="addToCart" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                                    <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
+                                </svg>
+                                Buy now
+                            </button>
+                            <button type="" class="flex items-center cursor-pointer px-3 py-2 text-xs font-bold leading-none text-purple-500 bg-white rounded-full hover:bg-purple-200 duration-500">
                                 <?php echo $plant['price']; ?> DH
                             </button>
                         </form>
