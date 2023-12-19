@@ -71,14 +71,18 @@ public function deletePlantFromCart($userId, $plantId)
 }
 
 
-public function searchPlantsByName($plantName)
+public function searchPlantsByName($searchTerm)
 {
-    $query = "SELECT * FROM plant WHERE `Name` LIKE :plantName";
+    $query = "SELECT * FROM plant WHERE Name LIKE :searchTerm";
     $stmt = $this->db->con->prepare($query);
-    $stmt->bindValue(':plantName', '%' . $plantName . '%', PDO::PARAM_STR); // Use LIKE for a partial match
+    $stmt->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
     $stmt->execute();
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+// Check if the search form is submitted
+
+
 
     
 
