@@ -53,46 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['searchByName'])) {
     // Fetch plants based on the search
     $searchedPlants = $plantManager->searchPlantsByName($searchedPlantName);
 
-    // Display the search results
-    if (!empty($searchedPlants)) {
-        foreach ($searchedPlants as $plant) {
-            // Display plant information in a card format
-            echo "
-            <div class='relative flex-shrink-0 max-w-xs mx-2 mb-6 overflow-hidden bg-purple-500 rounded-lg shadow-lg mb-9'>
-                <svg class='absolute bottom-0 left-0 mb-8' viewBox='0 0 375 283' fill='none'>
-                    <rect x='159.52' y='175' width='152' height='152' rx='8' transform='rotate(-45 159.52 175)' fill='#a17cf3'></rect>
-                    <rect y='107.48' width='152' height='152' rx='8' transform='rotate(-45 0 107.48)' fill='#a17cf3'></rect>
-                </svg>
-                <div class='relative flex items-center justify-center px-10 pt-10'>
-                    <div class='absolute bottom-0 left-0 block w-48 h-48 ml-3 -mb-24'>
-                    </div>
-                    <img class='relative w-40 h-[200px]' src='{$plant['image']}' alt='Plant Image' />
-                </div>
-                <div class='relative px-6 pb-6 mt-6 text-white'>
-                    <div class='flex justify-between'>
-                        <span class='block text-xl font-semibold'>
-                            {$plant['Name']}
-                        </span>
-                        <form action='' method='post'>
-                            <input type='hidden' name='PlantId' value='{$plant['IdPlant']}'>
-                            <input type='hidden' name='user_id' value='{$userId}'>
-                            <button type='submit' name='addToCart' class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
-                                <svg class='w-3.5 h-3.5 me-2' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 18 21'>
-                                    <path d='M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z'></path>
-                                </svg>
-                                Buy now
-                            </button>
-                            <button type='' class='flex items-center cursor-pointer px-3 py-2 text-xs font-bold leading-none text-purple-500 bg-white rounded-full hover:bg-purple-200 duration-500'>
-                                {$plant['price']} DH
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>";
-        }
-    } else {
-        echo "No plants found with the specified name.";
-    }
+
 }
 
 
@@ -187,19 +148,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['searchByName'])) {
             </div>
         </form>
 
-        <!-- <form class="max-w-lg m-auto flex flex-col  items-center" action="" method="post">
-            <label for="" class="text-white py-3 text-2xl text-center font-semibold">Filter Plants by Categorie</label>
-            <select name="categorie" class="w-full p-2 rounded-md bg-white text-black">
-                <option value="all">ALL</option>
-                <?php foreach ($categories as $categorie) : ?>
-                    <option value="<?php echo $categorie['IdCategorie']; ?>">
-                        <?php echo $categorie['CategorieName']; ?>
-                    </option>
-                <?php endforeach; ?>
+        <?php  
 
-            </select>
-            <input type="submit" value="Search" name="searchByCategory" class="w-1/2 py-2  mt-3 rounded-md bg-purple-500 text-white font-semibold cursor-pointer hover:bg-purple-700 transition duration-300">
-        </form> -->
+            // Display the search results
+    if (!empty($searchedPlants)) {
+        foreach ($searchedPlants as $plant) {
+            // Display plant information in a card format
+            echo "
+            <div class='relative flex-shrink-0 max-w-xs mx-2 mb-6 overflow-hidden bg-purple-500 rounded-lg shadow-lg mb-9'>
+                <svg class='absolute bottom-0 left-0 mb-8' viewBox='0 0 375 283' fill='none'>
+                    <rect x='159.52' y='175' width='152' height='152' rx='8' transform='rotate(-45 159.52 175)' fill='#a17cf3'></rect>
+                    <rect y='107.48' width='152' height='152' rx='8' transform='rotate(-45 0 107.48)' fill='#a17cf3'></rect>
+                </svg>
+                <div class='relative flex items-center justify-center px-10 pt-10'>
+                    <div class='absolute bottom-0 left-0 block w-48 h-48 ml-3 -mb-24'>
+                    </div>
+                    <img class='relative w-40 h-[200px]' src='{$plant['image']}' alt='Plant Image' />
+                </div>
+                <div class='relative px-6 pb-6 mt-6 text-white'>
+                    <div class='flex justify-between'>
+                        <span class='block text-xl font-semibold'>
+                            {$plant['Name']}
+                        </span>
+                        <form action='' method='post'>
+                            <input type='hidden' name='PlantId' value='{$plant['IdPlant']}'>
+                            <input type='hidden' name='user_id' value='{$userId}'>
+                            <button type='submit' name='addToCart' class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
+                                <svg class='w-3.5 h-3.5 me-2' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 18 21'>
+                                    <path d='M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z'></path>
+                                </svg>
+                                Buy now
+                            </button>
+                            <button type='' class='flex items-center cursor-pointer px-3 py-2 text-xs font-bold leading-none text-purple-500 bg-white rounded-full hover:bg-purple-200 duration-500'>
+                                {$plant['price']} DH
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>";
+        }
+    } else {
+        echo "No plants found with the specified name.";
+    }
+        
+        
+        
+        ?>
     </section>
 
     <section class="flex w-auto flex-wrap items-center justify-center bg-[#1A0B2D] pt-10 ">
